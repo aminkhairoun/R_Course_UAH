@@ -1,0 +1,72 @@
+---
+title: "Practicas general"
+author: "Amin Khairoun"
+date: "1/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Cargar bibliotecas y datos
+
+```{r}
+# install.packages("palmerpenguins")
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+library(plyr)
+library(tidyverse)
+library(ggplot2)
+```
+
+# Ejercicio 1:
+## Número de individuos 
+```{r}
+# totales
+totales <- table(penguins$species)
+totales
+# masculinos
+masculinos <- table(penguins$species[penguins$sex=='male'])
+masculinos
+# femeninos
+femeninos <- table(penguins$species[penguins$sex=='female'])
+femeninos
+# NA
+nodata <- table(penguins$species[is.na(penguins$sex)])
+nodata
+```
+## Estadísticas de las variables 
+
+```{r}
+stats <- sapply(penguins[c('bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g')], function(x) c(Media = mean(x, na.rm=T), Desviación = sd(x, na.rm=T),
+                  Min = min(x, na.rm=T), Max = max(x, na.rm=T)))
+stats
+```
+
+# Ejercicio 2:
+## Gráfico deel número de individuos de cada especie en cada isla
+```{r}
+ggplot(penguins) + 
+  geom_bar(aes(x = island, fill = species)) + 
+  scale_fill_manual(values = c('Chinstrap' = 'purple', 'Gentoo' = 'blue', 'Adelie' = 'orange')) + 
+  labs(x = 'Isla', y = 'Número de individuos', fill = 'Especie')
+```
+
+====> El gráfico muestra que la especie Adelie aparece en todas las islas,
+y que la especie 124 individuos se han muestreado de la isla Dream
+
+# Ejercicio 3:
+## Gráfico del tamaño cada especie con respecto al sexo
+
+```{r}
+ggplot(subset(penguins, !is.na(sex))) + 
+  geom_boxplot(aes(x = species, y = body_mass_g, fill = sex)) + 
+  labs(x = 'Especie', y = 'Tamaño', fill = 'Sexo')
+```
+
+====> El gráfico muestra que la especie Gentoo tiene  un mayor tamaño que las otras. 
+Los machos son siempre más grandes, pero la diferencia es menor en el caso del Chinstrap
+
+
